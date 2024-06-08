@@ -1,0 +1,54 @@
+import random
+
+class Bingo:
+    def __init__(self):
+        self.bolas_sorteadas = set()
+        self.cartela = self.gerar_cartela()
+
+    def sortear_bola(self):
+        while True:
+            bola = random.randint(1, 75)
+            if bola not in self.bolas_sorteadas:
+                self.bolas_sorteadas.add(bola)
+                print(f'Bola sorteada: {bola}')
+                return bola
+
+    def gerar_cartela(self):
+        cartela = {
+            'B': random.sample(range(1, 16), 5),
+            'I': random.sample(range(16, 31), 5),
+            'N': random.sample(range(31, 46), 4),  # coluna N tem 4 números
+            'G': random.sample(range(46, 61), 5),
+            'O': random.sample(range(61, 76), 5)
+        }
+        return cartela
+
+    def mostrar_cartela(self):
+        print("Cartela:")
+        for coluna in ['B', 'I', 'N', 'G', 'O']:
+            print(f'{coluna}: {self.cartela[coluna]}')
+
+    def marcar_numero(self, numero):
+        for coluna in self.cartela:
+            if numero in self.cartela[coluna]:
+                self.cartela[coluna][self.cartela[coluna].index(numero)] = 0
+
+    def verificar_bingo(self):
+        for coluna in self.cartela:
+            if any(numero != 0 for numero in self.cartela[coluna]):
+                return False
+        return True
+
+    def jogar(self):
+        self.mostrar_cartela()
+        while True:
+            bola = self.sortear_bola()
+            self.marcar_numero(bola)
+            self.mostrar_cartela()
+            if self.verificar_bingo():
+                print("Bingo!")
+                break
+
+if __name__ == "__main__":
+    jogo = Bingo()
+    jogo.jogar()
